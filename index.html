@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Neuro-Fuzzy-GA — Adaptive Test Suite Prioritization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+   <script src="chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="rail">
+  <div class="rail-brand">
+    <span class="dot dot-red"></span><span class="dot dot-amber"></span><span class="dot dot-green"></span>
+    <span class="rail-title">pipeline.yml</span>
+  </div>
+  <nav class="rail-stages" id="stageRail">
+    <div class="stage" data-stage="0"><span class="stage-num">01</span>Ingest</div>
+    <div class="stage" data-stage="1"><span class="stage-num">02</span>Neural Risk</div>
+    <div class="stage" data-stage="2"><span class="stage-num">03</span>Fuzzy Priority</div>
+    <div class="stage" data-stage="3"><span class="stage-num">04</span>GA Ordering</div>
+    <div class="stage" data-stage="4"><span class="stage-num">05</span>Result</div>
+  </nav>
+</div>
+
+<main>
+  <header class="topbar">
+    <div>
+      <h1>Neuro&#8209;Fuzzy&#8209;GA Hybrid</h1>
+      <p class="subtitle">Adaptive test suite prioritization for CI pipelines</p>
+    </div>
+    <div class="status" id="apiStatus"><span class="pulse"></span>checking backend…</div>
+  </header>
+
+  <section class="panel controls">
+    <div class="control-group">
+      <label>Suite source</label>
+      <div class="btn-row">
+        <button id="loadSampleBtn" class="btn btn-primary">Load sample suite</button>
+        <label class="btn btn-secondary file-btn">
+          Upload CSV
+          <input type="file" id="csvInput" accept=".csv" hidden />
+        </label>
+      </div>
+      <p class="hint">CSV needs columns: name, exec_time, historical_fail_rate, code_churn, coverage, days_since_last_run</p>
+    </div>
+
+    <div class="control-group">
+      <label for="genSlider">GA generations: <span id="genVal">150</span></label>
+      <input type="range" id="genSlider" min="20" max="400" step="10" value="150" />
+    </div>
+
+    <div class="control-group">
+      <label for="popSlider">Population size: <span id="popVal">60</span></label>
+      <input type="range" id="popSlider" min="10" max="200" step="10" value="60" />
+    </div>
+
+    <button id="runBtn" class="btn btn-run" disabled>Run prioritization ▸</button>
+  </section>
+
+  <section class="panel" id="loadedInfo" style="display:none">
+    <span id="loadedCount"></span> tests loaded &middot; <span id="loadedTime"></span>s total suite time
+  </section>
+
+  <section class="results" id="results" style="display:none">
+    <div class="panel metrics-panel">
+      <h2>Impact</h2>
+      <div class="metrics-grid" id="metricsGrid"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Time to 80% fault-detection value</h2>
+      <canvas id="timeChart" height="120"></canvas>
+    </div>
+
+    <div class="panel">
+      <h2>GA convergence (best APFD per generation)</h2>
+      <canvas id="convChart" height="120"></canvas>
+    </div>
+
+    <div class="panel">
+      <h2>Prioritized run order</h2>
+      <div class="table-wrap">
+        <table id="resultTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Test</th>
+              <th>Was #</th>
+              <th>Exec (s)</th>
+              <th>Risk</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel empty-state" id="emptyState">
+    <p>Load the sample suite or upload your own CSV, then run the pipeline.</p>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
